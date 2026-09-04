@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<email>
+	<to>jane.doe@infor.com</to>
+	<from>john.smith@infor.com</from>
+	<fromName>John Smith</fromName>
+	<subject>New invoice</subject>
+	<message>Thanks for the help! Here’s the updated invoice.</message>
+	<attachments>
+		<attachment>
+			<name>Invoice.pdf</name>
+		</attachment>
+		<attachment>
+			<name>Invoice_updated.pdf</name>
+		</attachment>
+	</attachments>
+	<links>
+		<link>
+			<name>Invoice as link</name>
+			<url>http://myMingleServer/infor/?favoriteContext=$pid=MDS_GenericDocument-2-1-LATEST</url>
+		</link>
+		<link>
+			<name>Link not available for: Invoice_updated.pdf, only files stored in IDM can be linked</name>
+			<url></url>
+		</link>
+	</links>
+</email>

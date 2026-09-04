@@ -1,0 +1,71 @@
+<controller>
+	<contentControls>
+		<contentControl>
+			<text>10057342</text>
+			<tag>LIST_NR</tag>
+		</contentControl>
+		<contentControl>
+			<text>Approved</text>
+			<tag>STATUS</tag>
+		</contentControl>
+		<contentControl>
+			<text>13/4/2016</text>
+			<tag>DATE</tag>
+		</contentControl>
+		<contentControl>
+			<text>Daniel Jonsson</text>
+			<tag>REVIEWER</tag>
+		</contentControl>
+		<contentControl>
+			<tag>DESC</tag>
+			<visible>false</visible>
+		</contentControl>
+		<contentControl>
+			<tag>ITEM_LIST</tag>
+			<sections>
+				<section>
+					<contentControl>
+						<tag>ITEM_NUMBER</tag>
+						<text>MDL-1000</text>
+					</contentControl>
+					<contentControl>
+						<tag>ITEM_DESC</tag>
+						<text>Normal widget</text>
+					</contentControl>
+					<contentControl>
+						<tag>ITEM_QUANTITY</tag>
+						<text>1000</text>
+					</contentControl>
+				</section>
+				<section>
+					<contentControl>
+						<tag>ITEM_NUMBER</tag>
+						<text>MDL-2000</text>
+					</contentControl>
+					<contentControl>
+						<tag>ITEM_DESC</tag>
+						<text>Super widget</text>
+					</contentControl>
+					<contentControl>
+						<tag>ITEM_QUANTITY</tag>
+						<text>200</text>
+					</contentControl>
+				</section>
+				<section>
+					<contentControl>
+						<tag>ITEM_NUMBER</tag>
+						<text>MDL-2200</text>
+					</contentControl>
+					<contentControl>
+						<tag>ITEM_DESC</tag>
+						<text>Super widget, extra fancy</text>
+					</contentControl>
+					<contentControl>
+						<tag>ITEM_QUANTITY</tag>
+						<text>10</text>
+					</contentControl>
+				</section>
+			</sections>
+		</contentControl>
+	</contentControls>
+</controller>

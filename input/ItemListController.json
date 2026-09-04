@@ -1,0 +1,72 @@
+{
+"contentControls":[
+	  {
+      "tag": "LIST_NR",
+      "text": "10057342"
+    },
+    {
+      "tag": "STATUS",
+      "text": "Approved"
+    },
+    {
+      "tag": "DATE",
+      "text": "13/4/2016"
+    },
+    {
+      "tag": "REVIEWER",
+      "text": "Daniel Jonsson"
+    },
+    {
+      "tag": "DESC",
+      "visible": false
+    },
+    {
+      "tag": "ITEM_LIST",
+      "type": "REPEATING_SECTION",
+      "sections": [
+        [
+          {
+            "tag": "ITEM_NUMBER",
+            "text": "MDL-1000"
+          },
+          {
+            "tag": "ITEM_DESC",
+            "text": "Normal widget"
+          },
+          {
+            "tag": "ITEM_QUANTITY",
+            "text": "1000"
+          }
+        ],
+        [
+          {
+            "tag": "ITEM_NUMBER",
+            "text": "MDL-2000"
+          },
+          {
+            "tag": "ITEM_DESC",
+            "text": "Super widget"
+          },
+          {
+            "tag": "ITEM_QUANTITY",
+            "text": "200"
+          }
+        ],
+        [
+          {
+            "tag": "ITEM_NUMBER",
+            "text": "WDG-2200"
+          },
+          {
+            "tag": "ITEM_DESC",
+            "text": "Super widget, extra fancy"
+          },
+          {
+            "tag": "ITEM_QUANTITY",
+            "text": "10"
+          }
+        ]
+      ]
+    }
+]
+}
