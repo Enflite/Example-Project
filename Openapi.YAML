@@ -1,0 +1,362 @@
+openapi: 3.0.3
+info:
+  title: Infor IDM (Document Management) API — INFERRED, UNVERIFIED
+  version: "0.1.0-inferred"
+  description: |
+    ⚠️ IMPORTANT — READ BEFORE USING THIS FILE ⚠️
+
+    This specification was NOT derived from a real API definition, an OpenAPI/Swagger
+    file, or network traces. The source repository (github.com/Enflite/Example-Project)
+    contains only .NET SAMPLE CODE that calls the closed-source
+    `Infor.DocumentManagement.ICP` SDK. The SDK hides the actual HTTP wire format —
+    no route paths, verbs, or JSON schemas appear anywhere in that repo.
+
+    Every path, parameter, and schema below is a BEST-EFFORT GUESS, reverse-engineered
+    only from:
+      1. The SDK method names and object model observed in the sample code
+         (Connection, CMItem, CMItems, CMResource, SearchQuery, SearchQueries, ...), and
+      2. General knowledge of how Infor ION API gateways typically expose IDM
+         functionality (tenant-scoped REST paths under an ION API app).
+
+    DO NOT treat this as ground truth. Before using it for integration, codegen, or
+    documentation purposes, validate it against:
+      - Infor's official IDM / ION API documentation, or
+      - The live Swagger/OpenAPI document typically exposed by a running ION API
+        instance (often at a path like `/{tenant}/IDM/swagger.json` or discoverable
+        via the ION API Gateway's own API catalog), or
+      - HAR/network captures of the .NET SDK actually talking to a real IDM server.
+    Endpoints, field names, and status codes here may not match reality.
+
+  contact:
+    name: Unverified — generated from SDK sample code only
+
+servers:
+  - url: "https://{server}:{port}/{tenant}/IDM"
+    description: Inferred base URL pattern (ION API gateway style). Replace with your actual tenant endpoint.
+    variables:
+      server:
+        default: your-ion-api-host
+      port:
+        default: "443"
+      tenant:
+        default: your-tenant
+
+security:
+  - basicAuth: []
+  - oauth2: []
+  - bearerAuth: []
+
+paths:
+  /connection:
+    post:
+      summary: "INFERRED — Establish/authenticate a session (maps to Connection.Connect())"
+      description: |
+        Inferred from `Connection` constructor + `.Connect()` in Authentication.cs.
+        The real SDK may not use a discrete REST call for this at all (e.g. Basic/OAuth1
+        could be handled per-request via headers rather than a session endpoint).
+      operationId: inferredConnect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionRequest'
+      responses:
+        '200':
+          description: Authenticated session / token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionResponse'
+        '401':
+          description: Authentication failed
+
+  /items/search:
+    post:
+      summary: "INFERRED — Search for items (maps to CMItem.Search / CMItems.Search)"
+      description: Inferred from Search.cs and Retrieve.cs usage of SearchQuery/SearchQueries and XQuery strings.
+      operationId: inferredSearchItems
+      parameters:
+        - name: startIndex
+          in: query
+          schema: { type: integer }
+          description: Inferred from CMItems.SearchRetrieveFirstIndex
+        - name: pageSize
+          in: query
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/SearchQueries'
+                - type: object
+                  properties:
+                    xquery:
+                      type: string
+                      example: "/MDS_File[@MDS_Name IS NOT NULL]"
+      responses:
+        '200':
+          description: Matching items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CMItem'
+
+  /items/search/count:
+    post:
+      summary: "INFERRED — Count matching items (maps to CMItems.SearchCount)"
+      operationId: inferredSearchCount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchQueries'
+      responses:
+        '200':
+          description: Count result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    format: int64
+
+  /items:
+    post:
+      summary: "INFERRED — Create a new item (maps to CMItem.Add(conn))"
+      description: Inferred from Add.cs (create item, set attributes, attach resource, Add()).
+      operationId: inferredCreateItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CMItem'
+      responses:
+        '201':
+          description: Item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CMItem'
+
+  /items/{pid}:
+    get:
+      summary: "INFERRED — Retrieve an item by pid"
+      operationId: inferredGetItem
+      parameters:
+        - $ref: '#/components/parameters/Pid'
+      responses:
+        '200':
+          description: Item found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CMItem'
+        '404':
+          description: Not found
+    delete:
+      summary: "INFERRED — Delete an item (maps to CMItem.Delete(conn))"
+      operationId: inferredDeleteItem
+      parameters:
+        - $ref: '#/components/parameters/Pid'
+      responses:
+        '204':
+          description: Deleted
+
+  /items/{pid}/resources/{resourceName}:
+    get:
+      summary: "INFERRED — Download resource bytes (maps to CMItem.RetrieveResourceData)"
+      operationId: inferredGetResource
+      parameters:
+        - $ref: '#/components/parameters/Pid'
+        - name: resourceName
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Binary resource stream
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+    put:
+      summary: "INFERRED — Upload/replace resource (maps to CMItem.UpdateResource, two-step large-file path)"
+      operationId: inferredUpdateResource
+      parameters:
+        - $ref: '#/components/parameters/Pid'
+        - name: resourceName
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Resource updated
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Inferred: AuthenticationMode.Basic — requires a Basic-enabled router in Infor Grid."
+    oauth2:
+      type: oauth2
+      description: "Inferred: AuthenticationMode.OAuth1 / OAuth2 — consumer key/secret or .ionapi Resource Owner Grant."
+      flows:
+        clientCredentials:
+          tokenUrl: "https://{server}/oauth/token"
+          scopes: {}
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: "Inferred: AuthenticationMode.Authorization — raw 'Bearer <token>' header, token generated server-side outside this SDK."
+
+  parameters:
+    Pid:
+      name: pid
+      in: path
+      required: true
+      schema:
+        type: string
+      description: "Persistent ID, matches CMItem.Pid"
+
+  schemas:
+    ConnectionRequest:
+      type: object
+      description: Inferred from Connection constructor overloads in Authentication.cs
+      properties:
+        url:
+          type: string
+          example: "https://<server>:<port>/ca/"
+        authenticationMode:
+          type: string
+          enum: [Basic, OAuth1, OAuth2, Authorization, Token]
+        username:
+          type: string
+        password:
+          type: string
+        consumerKey:
+          type: string
+        secretKey:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        bearerToken:
+          type: string
+        tenant:
+          type: string
+        isPrivateSpace:
+          type: boolean
+        crossRefClaim:
+          type: string
+        impersonationIDValue:
+          type: string
+
+    ConnectionResponse:
+      type: object
+      properties:
+        sessionToken:
+          type: string
+        correlationId:
+          type: string
+          description: "MDC header, auto-generated with 'req-' prefix"
+        callerId:
+          type: string
+          description: "MDC header, auto-generated per auth mode"
+
+    SearchQueries:
+      type: object
+      properties:
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchQuery'
+
+    SearchQuery:
+      type: object
+      properties:
+        entityName:
+          type: string
+          example: "MDS_File"
+        arguments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchArgument'
+
+    SearchArgument:
+      type: object
+      properties:
+        attributeName:
+          type: string
+          example: "MDS_Name"
+        operator:
+          type: string
+          example: "SearchOpIsNotNull"
+        value:
+          nullable: true
+
+    CMItem:
+      type: object
+      properties:
+        pid:
+          type: string
+        entityName:
+          type: string
+          example: "MDS_File"
+        displayName:
+          type: string
+          nullable: true
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CMAttribute'
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/CMResource'
+
+    CMAttribute:
+      type: object
+      properties:
+        name:
+          type: string
+        value: {}
+        dataType:
+          type: string
+          nullable: true
+
+    CMResource:
+      type: object
+      properties:
+        name:
+          type: string
+        filename:
+          type: string
+        mimeType:
+          type: string
+        size:
+          type: integer
+          format: int64
+        url:
+          type: string
